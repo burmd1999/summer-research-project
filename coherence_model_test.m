@@ -13,7 +13,7 @@ phi = 0.25;
 epsilon = normrnd(mu, sigma, pnts, 1);
 delta = normrnd(mu, sigma, pnts, 1);
 % loop
-for t = 2:1000
+for t = 2:pnts
     y(t) = theta*y(t-1) + delta(t);
     x(t)= phi*x(t-1) + phi*y(t-1) + epsilon(t);
 end
