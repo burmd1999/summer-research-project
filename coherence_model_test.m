@@ -1,38 +1,53 @@
+% time, sampling rate, windows
+pnts = ALLEEG.pnts;
+srate = ALLEEG.srate;
+windows = floor(ALLEEG.pnts/ALLEEG.srate);
+
 % generate signals x and y
-time = 1000;
-srate = 1;
-% create vectors 
-y = zeros(time, 1);
-x = zeros(time, 1);
+y = zeros(1, pnts);
+x = zeros(1, pnts);
 sigma = 1;
 mu = 0;
 theta = 0.5;
 phi = 0.25;
-epsilon = normrnd(mu, sigma, time, 1);
-delta = normrnd(mu, sigma, time, 1);
+epsilon = normrnd(mu, sigma, pnts, 1);
+delta = normrnd(mu, sigma, pnts, 1);
 % loop
 for t = 2:1000
     y(t) = theta*y(t-1) + delta(t);
     x(t)= phi*x(t-1) + phi*y(t-1) + epsilon(t);
 end
 
-% compute spectral densities
-Sxx = abs(fft(x)).^2;
-Syy = abs(fft(y)).^2;
-Sxy = fft(x).*conj(fft(y));
+% generate matrix of zeros to store PSDX, PSDY, CSDXY
+Sxx = zeros(windows, srate);
+Syy = zeros(windows, srate);
+Sxy = zeros(windows, srate);
+
+% loop to compute spectral densities for each window
+for i = 1:windows
+    Sxx(i, :) = (abs(fft(x(1 + srate*(i-1) : srate*i)))).^2;
+    Syy(i, :) = (abs(fft(y(1 + srate*(i-1) : srate*i)))).^2;
+    Sxy(i, :) = fft(x(1 + srate*(i-1) : srate*i)).*conj(fft(y(1 + srate*(i-1) : srate*i)));
+end
+
+% average over 1894 windows
+Sxx = mean(Sxx);
+Syy = mean(Syy);
+Sxy = mean(Sxy);
 
 % compute coherence 
-coh = ((abs(Sxy)).^2)./((Sxx).*(Syy));
+ coh = ((abs(Sxy)).^2)./((Sxx).*(Syy));
 
 % plot coherence
-coh = [coh(1:time/2)]
+% ignore negative frequencies
+coh = [coh(1:srate/2)]
 % create frequency vector
-freq = linspace(0, time/2, time/2)
+freq = linspace(0, srate/2, srate/2)
 figure()
-plot1 = plot(freq,coh)
+plot1 = plot(freq, coh)
 
 % plot derived coherence function
-coh2 = 1./(21-16*cos(freq))
+coh2 = 1./(21 - 16*cos(freq))
 figure()
 plot2 = plot(freq, coh2)
 
