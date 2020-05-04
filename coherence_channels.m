@@ -2,17 +2,18 @@
 % coherence = |Sxy|^2/(Sxx)*(Syy)
 
 % first rename variables
-srate = ALLEEG.srate
-windows = floor(ALLEEG.pnts/ALLEEG.srate)
+srate = ALLEEG.srate;
+windows = floor(ALLEEG.pnts/ALLEEG.srate);
 
 % call channel 10 X, channel 11 Y, channel 120 Z
-X = EEG.data(10, :)
-Y = EEG.data(11, :)
-Z = EEG.data(120, :)
+X = EEG.data(10, :);
+Y = EEG.data(11, :);
+Z = EEG.data(120, :);
 
 % generate matrix of zeros to store PSDX, PSDY, PSDZ, CSDXY, CSDXZ
 Sxx = zeros(windows, srate);
 Syy = zeros(windows, srate);
+Szz = zeros(windows, srate);
 Sxy = zeros(windows, srate);
 Sxz = zeros(windows, srate);
 
@@ -34,16 +35,16 @@ Sxz = mean(Sxz);
 
 % compute spectral coherence for both pairs of channels
 % channel 10 and 11
-coh1 = ((abs(Sxy)).^2)./((Sxx).*(Syy))
+coh1 = ((abs(Sxy)).^2)./((Sxx).*(Syy));
 % channel 10 and 120
-coh2 = ((abs(Sxz)).^2)./((Sxx).*(Szz))
+coh2 = ((abs(Sxz)).^2)./((Sxx).*(Szz));
 
 % plot coherence for each pair
 % ignore negative frequencies
-coh1 = [coh1(1:srate/2)]
-coh2 = [coh2(1:srate/2)]
+coh1 = [coh1(1:srate/2)];
+coh2 = [coh2(1:srate/2)];
 % create frequence vector 
-freq = linspace(0, srate/2, srate/2)
+freq = linspace(0, srate/2, srate/2);
 % channel 10 and 11
 figure()
 plot1 = plot(freq, coh1)
