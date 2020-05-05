@@ -47,7 +47,7 @@ figure()
 plot1 = plot(freq, coh)
 
 % plot derived coherence function
-coh2 = 1./(21 - 16*cos(freq))
+coh2 = 1./(21 - 16*cos(2*pi*freq))
 figure()
 plot2 = plot(freq, coh2)
 
