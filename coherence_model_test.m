@@ -1,7 +1,7 @@
 % time, sampling rate, windows
-pnts = ALLEEG.pnts;
+pnts = 10*ALLEEG.pnts;
 srate = ALLEEG.srate;
-windows = floor(ALLEEG.pnts/ALLEEG.srate);
+windows = floor(10*ALLEEG.pnts/ALLEEG.srate);
 
 % generate signals x and y
 y = zeros(1, pnts);
@@ -40,7 +40,7 @@ Sxy = mean(Sxy);
 
 % plot coherence
 % ignore negative frequencies
-coh = [coh(1:srate/2)]
+coh = [coh((srate/2 + 1):srate) ; coh(1:srate/2)]
 % create frequency vector
 freq = linspace(0, srate/2, srate/2)
 figure()
