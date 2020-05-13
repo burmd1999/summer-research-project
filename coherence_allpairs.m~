@@ -14,7 +14,7 @@ pairs = nchoosek(1:numchannels, 2);
 COH = zeros(numpairs, srate);
 
 %% loop to calculate coherence of each pair
-for i = 1:numpairs
+for i = 1:
     PSD1 = zeros(1, srate);
     PSD2 = zeros(1, srate);
     CSD = zeros(1, srate);
