@@ -4,3 +4,8 @@ hann_window.m
 hann_window.m~
 Windowcoherencedata.mat
 overlap_test.m
+breaks_test.m
+breakpoints_code.m~
+breakpoints_code.mat
+windows_overlap_data.mat
+breaks.m
