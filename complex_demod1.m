@@ -9,7 +9,6 @@ t = [0:T:2];
 f = 50; 
 % phase vector
 phi = [zeros(1, 1001) (pi/4)*ones(1, 1000)]; 
-%phi = [0 0 pi/4];
 % sinusoidal signal with random noise
 x = cos(2*pi*f.*t + phi) + randn(size(t))/10; 
 
