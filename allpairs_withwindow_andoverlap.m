@@ -5,7 +5,7 @@ data = EEG.data;
 numpnts = 969958
 
 %% hann window function
-L = 512;
+L = srate;
 w = hann(L)';
 
 %% overlap
