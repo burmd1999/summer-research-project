@@ -15,7 +15,7 @@ x = cos(2*pi*f.*t + phi) + randn(size(t))/10;
 %% plot signal
 figure()
 plot(t, x)
-title('50 Hz Sinusoidal Signal with Random Normal Noise')
+title('5 Hz Monocomponent Sinusoidal Signal with Random Normal Noise')
 xlabel('Time')
 
 %% complex demodulation
@@ -28,7 +28,7 @@ y = lowpass(x_1, 0.1, fs)
 phase = angle(y);
 figure()
 plot(t, phase)
-title('Phase Plot')
+title('Phase Plot for Monocomponent 5 Hz Signal')
 xlabel('Time')
 ylabel('Phase')
 

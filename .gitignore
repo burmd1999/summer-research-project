@@ -16,3 +16,5 @@ complex_demod1.m~
 cohtest.m
 breaks_test.m~
 .DS_Store
+coh.m~ 
+*.set

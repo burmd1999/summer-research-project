@@ -1,14 +1,35 @@
-function coherence = coh(data, srate, numchannels, brkpnts)
+function coherence = coh(data, srate, brkpnts)
+
+% DESCRIPTION OF FUNCTION
+
+% The function coh(data, srate, brkpnts) calculates the coherence between each pair of channels in the EEG data. 
+
+% Inputs: 
+
+% data: is a matrix containing the EEG data with dimensions (number of channels) x (total number of data points).
+
+% srate: is an integer whose value is the sampling rate of the data collected. 
+
+% brkpnts: is a row vector whose entries are the breakpoints in the data. Note
+% that the first entry of the brkpnts vector should be 0, followed by the
+% breakpoints within the data, and the last entry should be the total
+% number of points in the data.
+
+% Output:
+
+% coherence: is a matrix with dimensions (number of channels choose 2) x (srate).
+
+% FUNCTION CODE
+
+% number of channels
+numchannels = size(data, 1);
 
 % hann window function
-L = srate;
-w = hann(L)';
+w = hann(srate)';
 
 % overlap
-overlap = srate/2;
+overlap = floor(srate/2);
 
-% break points
-brkpnts = [0 900 21357 206110 969958];
 % size of brkpnts vector
 s = size(brkpnts, 2);
 
@@ -23,9 +44,9 @@ numpairs = nchoosek(numchannels, 2);
 pairs = nchoosek(1:numchannels, 2);
 
 % create matrices of zeros to store coherence data 
-COH = zeros(numpairs, srate);
+coherence = zeros(numpairs, srate);
 
-% loop to calculate coherence of each pair
+% loop to calculate coherence of each pair of channels
 for i = 1:numpairs 
     PSD1 = zeros(1, srate);
     PSD2 = zeros(1, srate);
@@ -37,8 +58,7 @@ for i = 1:numpairs
             CSD = CSD + (fft((data(pairs(i, 1), brkpnts(k - 1) + 1 + overlap*(j - 1):(brkpnts(k - 1) + srate + overlap*(j - 1)))).*w).*conj(fft((data(pairs(i, 2), brkpnts(k - 1) + 1 + overlap*(j - 1):(brkpnts(k - 1) + srate + overlap*(j - 1)))).*w)))./numwindows;
         end
     end
-    COH(i, :) = ((abs(CSD)).^2)./(PSD1.*(PSD2));
+    coherence(i, :) = ((abs(CSD)).^2)./(PSD1.*(PSD2));
 end
 
-coherence = [COH]
 end
