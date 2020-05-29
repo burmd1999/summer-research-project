@@ -18,3 +18,4 @@ breaks_test.m~
 .DS_Store
 coh.m~ 
 *.set
+no_voc_task_301_coherence.mat
