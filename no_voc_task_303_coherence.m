@@ -5,7 +5,7 @@
 eeglab
 
 % import data set
-EEG = pop_loadset('sub-301_sz_eeg_clean.set')
+EEG = pop_loadset('sub-303_sz_eeg_clean.set')
 
 % variables 
 data = EEG.data; 
@@ -13,7 +13,7 @@ srate = EEG.srate;
 brkpnts = [0 EEG.pnts];
 
 % compute coherence
-[no_voc_task_301_coh, pairs_301] = coh(data, srate, brkpnts);
+[no_voc_task_303_coh, pairs_303] = coh(data, srate, brkpnts);
 
 % save coherence 
-save('no_voc_task_301_coherence.mat', 'no_voc_task_301_coh', 'pairs_301') 
+save('no_voc_task_303_coherence.mat', 'no_voc_task_303_coh', 'pairs_303') 

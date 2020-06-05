@@ -1,4 +1,4 @@
-function coherence = coh(data, srate, brkpnts)
+function [coherence, pairs] = coh(data, srate, brkpnts)
 
 % DESCRIPTION OF FUNCTION
 
@@ -15,9 +15,11 @@ function coherence = coh(data, srate, brkpnts)
 % breakpoints within the data, and the last entry should be the total
 % number of points in the data.
 
-% Output:
+% Outputs:
 
 % coherence: is a matrix with dimensions (number of channels choose 2) x (srate).
+
+% pairs: is a matrix with dimensions (number of channels choose 2) x 2, where the n^th row of the coherence matrix is the coherence between the channels defined by the n^th row of the pairs matrix.
 
 % FUNCTION CODE
 

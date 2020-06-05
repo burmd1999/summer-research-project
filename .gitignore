@@ -19,3 +19,4 @@ breaks_test.m~
 coh.m~ 
 *.set
 no_voc_task_301_coherence.mat
+*.mat
