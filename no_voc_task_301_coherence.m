@@ -16,4 +16,5 @@ brkpnts = [0 EEG.pnts];
 [no_voc_task_301_coh, pairs_301] = coh(data, srate, brkpnts);
 
 % save coherence 
-save('no_voc_task_301_coherence.mat', 'no_voc_task_301_coh', 'pairs_301') 
+save('no_voc_task_301_coherence.mat', 'no_voc_task_301_coh', 'pairs_301')
+
