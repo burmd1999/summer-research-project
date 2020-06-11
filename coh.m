@@ -1,4 +1,4 @@
-function [coherence, pairs] = coh(data, srate, brkpnts)
+function [COH] = coh(data, srate, brkpnts)
 
 % DESCRIPTION OF FUNCTION
 
@@ -17,9 +17,7 @@ function [coherence, pairs] = coh(data, srate, brkpnts)
 
 % Outputs:
 
-% coherence: is a matrix with dimensions (number of channels choose 2) x (srate).
-
-% pairs: is a matrix with dimensions (number of channels choose 2) x 2, where the n^th row of the coherence matrix is the coherence between the channels defined by the n^th row of the pairs matrix.
+% COH: is a (numchannels) x (numchannels) x (srate) 3D matrix where the vector (i, j, :) is the coherence between the i^th and j^th channels.
 
 % FUNCTION CODE
 
@@ -39,28 +37,25 @@ s = size(brkpnts, 2);
 k = 2:s; 
 numwindows = sum(floor((brkpnts(k) - brkpnts(k-1) - srate)/overlap) + 1);
 
-% pairs of channels
-% number of pairs of channels
-numpairs = nchoosek(numchannels, 2);
-% vector of each pair of channels
-pairs = nchoosek(1:numchannels, 2);
-
 % create matrices of zeros to store coherence data 
-coherence = zeros(numpairs, srate);
+COH = zeros(numchannels, numchannels, srate);
 
 % loop to calculate coherence of each pair of channels
-for i = 1:numpairs 
-    PSD1 = zeros(1, srate);
-    PSD2 = zeros(1, srate);
-    CSD = zeros(1, srate);
-    for k = 2:s
-        for j = 1:floor((brkpnts(k) - brkpnts(k - 1) - srate)/overlap) + 1
-            PSD1 = PSD1 + ((abs(fft((data(pairs(i, 1), brkpnts(k - 1) + 1 + overlap*(j - 1):(brkpnts(k - 1) + srate + overlap*(j - 1)))).*w))).^2)./numwindows;
-            PSD2 = PSD2 + ((abs(fft((data(pairs(i, 2), brkpnts(k - 1) + 1 + overlap*(j - 1):(brkpnts(k - 1) + srate + overlap*(j - 1)))).*w))).^2)./numwindows;
-            CSD = CSD + (fft((data(pairs(i, 1), brkpnts(k - 1) + 1 + overlap*(j - 1):(brkpnts(k - 1) + srate + overlap*(j - 1)))).*w).*conj(fft((data(pairs(i, 2), brkpnts(k - 1) + 1 + overlap*(j - 1):(brkpnts(k - 1) + srate + overlap*(j - 1)))).*w)))./numwindows;
+COH = zeros(numchannels, numchannels, srate);
+for i = 1:numchannels
+    for j = 1:numchannels
+        PSD1 = zeros(1, srate);
+        PSD2 = zeros(1, srate);
+        CSD = zeros(1, srate);
+        for k = 2:s
+            for l = 1:floor((brkpnts(k) - brkpnts(k - 1) - srate)/overlap) + 1
+                PSD1 = PSD1 + ((abs(fft((data(i, brkpnts(k - 1) + 1 + overlap*(l - 1):(brkpnts(k - 1) + srate + overlap*(l - 1)))).*w))).^2)./numwindows;
+                PSD2 = PSD2 + ((abs(fft((data(j, brkpnts(k - 1) + 1 + overlap*(l - 1):(brkpnts(k - 1) + srate + overlap*(l - 1)))).*w))).^2)./numwindows;
+                CSD = CSD + (fft((data(i, brkpnts(k - 1) + 1 + overlap*(l - 1):(brkpnts(k - 1) + srate + overlap*(l - 1)))).*w).*conj(fft((data(j, brkpnts(k - 1) + 1 + overlap*(l - 1):(brkpnts(k - 1) + srate + overlap*(l - 1)))).*w)))./numwindows;
+            end
         end
+        COH(i, j, :) = ((abs(CSD)).^2)./(PSD1.*(PSD2));
     end
-    coherence(i, :) = ((abs(CSD)).^2)./(PSD1.*(PSD2));
 end
 
 end

@@ -20,3 +20,6 @@ coh.m~
 *.set
 no_voc_task_301_coherence.mat
 *.mat
+matlabtests
+jobscripts
+eeglab2019_1

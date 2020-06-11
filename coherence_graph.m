@@ -56,6 +56,17 @@ end
 % average clustering coefficient over all nodes
 C_v = mean(C_i);
 
+%% avg degree of nodes
+deg = degree(G);
+avgdeg = mean(deg);
+
+
+%% regular graph
+A_R 
+
+
+
+
 
 
 
