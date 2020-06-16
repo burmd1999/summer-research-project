@@ -1,32 +1,31 @@
 %% load data
+load('COH.mat', 'COH')
 
-load('coherence_test.mat', 'coherence_test', 'pairs_test')
-
-%% variables 
-srate = size(coherence_test, 2);
-numchannels = pairs_test(size(pairs_test, 1), 2);
+%% variables
+srate = size(COH, 3);
+numchannels = size(COH, 1);
 
 % set a threshold for coherence
 threshold = 0.20;
 
 %% adjacency matrix
+A = all(COH > threshold & COH ~= 1, 3);
 
-A = zeros(numchannels);
+%A = zeros(numchannels)
 
 % loop to create adjacency matrix
-for i = 1:length(coherence_test)
-    if coherence_test(i, :) > threshold
-        A(pairs_test(i, 1), pairs_test(i, 2)) = 1;
-        A(pairs_test(i, 2), pairs_test(i, 1)) = 1;
-    else A(pairs_test(i, 1), pairs_test(i, 2)) = 0;
-         A(pairs_test(i, 2), pairs_test(i, 1)) = 0;
-    end
-end
+%for i = 1:length(coherence_test)
+%    if coherence_test(i, :) > threshold
+%        A(pairs_test(i, 1), pairs_test(i, 2)) = 1;
+%        A(pairs_test(i, 2), pairs_test(i, 1)) = 1;
+%    else A(pairs_test(i, 1), pairs_test(i, 2)) = 0;
+%         A(pairs_test(i, 2), pairs_test(i, 1)) = 0;
+%    end
+%end
 
 %% plot graph
-
-channels = [1:numchannels];
 G = graph(A);
+figure()
 plot(G)
 
 %% characteristic path length between all pairs of nodes
@@ -35,14 +34,13 @@ D = distances(G);
 cpl = (sum(D, 'all'))./(G.numnodes*(G.numnodes - 1));
 
 %% find clustering coefficient
-
 % loop to find clustering coefficient of each node
 C_i = zeros(G.numnodes, 1);
 for v = 1:G.numnodes
     n = [find(A(v, :))];
     E = 0;
     for w = n([1:length(n)])
-        m = []
+        m = [];
         m = [find(A(w, :))];
         for j = m([1:length(m)])
             if any(n == j)
@@ -60,9 +58,20 @@ C_v = mean(C_i);
 deg = degree(G);
 avgdeg = mean(deg);
 
-
 %% regular graph
-A_R 
+A_R = zeros(numchannels);
+G_R = graph(A_R);
+figure()
+plot(G_R)
+
+
+
+
+
+
+
+
+
 
 
 

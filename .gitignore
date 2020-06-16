@@ -23,3 +23,6 @@ no_voc_task_301_coherence.mat
 matlabtests
 jobscripts
 eeglab2019_1
+no_voc_task_301_coh_cc_test.m
+extractconditionstest.m
+untitled8.m
