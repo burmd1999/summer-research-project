@@ -1,10 +1,13 @@
 %% Watts-Strogatz small world network model
 
-% number of nodes, degree
-N = numchannels % number of nodes
-k = floor(avgdeg)
+% load data
+load('coherencegraph.mat')
 
-% create a ring lattice with nodes = numchannels, k = same avg degree as
+% number of nodes, degree
+N = numchannels;
+k = floor(avgdeg); 
+
+% create a regular ring lattice with nodes = numchannels, k = same avg degree as
 % coh graph
 % each node connected to its k nearest neighbours, k/2 on each side
 
@@ -54,16 +57,17 @@ end
 C_r = mean(C_i);
 
 
-% rewiring process for different values of p
-% consider p = 0.001, p = 0.01, p = 0.1, p = 1
+%% rewiring process for different values of p
 
-%% p = 0.001 
+% consider p = 0.001 
 % reiterate rewiring process for p = 0.001 20 times 
 
-C = zeros(20, 1);
-L = zeros(20, 1);
+% create vectors to store characteristic path lengths and clustering
+% coefficients of each random realization 
+L_p = zeros(20, 1);
+C_p = zeros(20, 1);
 
-for i = 1:20
+for x = 1:20
     
     p = 0.001; 
     A = full(adjacency(G_r)); % re-initialize adjacency matrix to regular ring lattice 
@@ -91,36 +95,36 @@ for i = 1:20
 
     % compute characteristic path length for rewired graph
     D = distances(G_rewired);
-    L_p = (sum(D, 'all'))./(N*(N - 1));
+    L = (sum(D, 'all'))./(N*(N - 1));
 
     % compute clustering coefficient for rewired graph
     C_i = zeros(N, 1);
-    for v = 1:N
-        n = [find(A(v, :))];
+    for i = 1:N
+        n = [find(A(i, :))];
         E = 0;
-        for w = n([1:length(n)])
+        for j = n([1:length(n)])
             m = [];
-            m = [find(A(w, :))];
-            for j = m([1:length(m)])
-                if any(n == j)
+            m = [find(A(j, :))];
+            for k = m([1:length(m)])
+                if any(n == k)
                 E = E + 1;
                 end
             end
         end
-        C_i(v) = E/(length(n)*(length(n) - 1)); % multiply by 2 for (k*(k-1)/2) but then divide by 2 to account for double counting of edges
+        C_i(i) = E/(length(n)*(length(n) - 1)); % multiply by 2 for (k*(k-1)/2) but then divide by 2 to account for double counting of edges
     end
 
     % average clustering coefficient over all nodes
-    C_p = mean(C_i);
+    C = mean(C_i);
 
     % store L_p and C_p in L and C vectors
-    L(i) = L_p;
-    C(i) = C_p;
+    L_p(x) = L;
+    C_p(x) = C;
 end
 
 % average over 20 random realizations
-L = mean(L);
-C = mean(C);
+L_p = mean(L_p);
+C_p = mean(C_p);
 
 
 

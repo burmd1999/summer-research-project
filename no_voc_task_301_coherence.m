@@ -19,7 +19,7 @@ srate = EEG.srate;
 brkpnts = [0 boundarypnts EEG.pnts];
 
 %% compute coherence
-[no_voc_task_301_coh] = coh(data, srate, brkpnts);
+no_voc_task_301_coh = coh(data, srate, brkpnts);
 
 % save coherence 
 save('no_voc_task_301_coh.mat', 'no_voc_task_301_coh')
