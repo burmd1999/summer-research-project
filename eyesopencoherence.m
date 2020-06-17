@@ -38,10 +38,10 @@ for t = 1:s
     eyesopendata{t} = coh(data, srate, brkpnts);
     
 end
-
+%%
 % average 3 segments
 t = 1:s
-eyesopen_coh = sum(eyesopen{t})./s;
+eyesopen_coh = sum(eyesopendata{t})./3 % this does not work
 
   
     
