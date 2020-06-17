@@ -1,4 +1,4 @@
-function [COH] = coh(data, srate, brkpnts)
+function COH = coh(data, srate, brkpnts)
 
 % DESCRIPTION OF FUNCTION
 
