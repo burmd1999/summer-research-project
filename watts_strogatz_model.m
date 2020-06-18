@@ -1,15 +1,11 @@
-%% Watts-Strogatz small world network model
-
-% load data
-load('coherencegraph.mat')
+%% Watts-Strogatz small world network model 
 
 % number of nodes, degree
-N = numchannels;
-k = floor(avgdeg); 
+N = 1000;
+k = 10; 
 
-% create a regular ring lattice with nodes = numchannels, k = same avg degree as
-% coh graph
-% each node connected to its k nearest neighbours, k/2 on each side
+% test code to see if randomization process reproduces graph in Watts paper
+% for N=1000 nodes and k=10 nearest neighbours
 
 %% regular ring lattice
 % build adjacency matrix for ring lattice
@@ -57,74 +53,80 @@ end
 C_r = mean(C_i);
 
 
-%% rewiring process for different values of p
+%% random rewiring process for varying values of p
 
-% consider p = 0.001 
-% reiterate rewiring process for p = 0.001 20 times 
+% sequence of p values 
+p_v = [0.0001 0.00025 0.0005 0.001 0.0025 0.005 0.01 0.025 0.05 0.1 0.25 0.5 1]; 
+% create vectors to store characteristic path length and clustering coefficient for each value of p
+L_p = zeros(1, length(p_v));
+C_p = zeros(1, length(p_v));
 
-% create vectors to store characteristic path lengths and clustering
-% coefficients of each random realization 
-L_p = zeros(20, 1);
-C_p = zeros(20, 1);
-
-for x = 1:20
-    
-    p = 0.001; 
-    A = full(adjacency(G_r)); % re-initialize adjacency matrix to regular ring lattice 
-    
-    for sourcenode = 1:N                                            % consider each source node
-        for t = 1:k/2                                               % consider each righthand nearest neighbour of each node, moving from first neighbour clockwise                  
-            endnodes = find(A(sourcenode, :));                      % find the endnodes of the source node (i.e nodes connected by an edge)
-            r = rand;                                               % generate uniform random number between 0 and 1
-            if r > p                                                % if r is greater than the probability given p, continue rewiring process                    
-               A(sourcenode, mod(sourcenode + t - 1, N) + 1) = 0;   % remove the edge from the original end node
-               A(mod(sourcenode + t - 1, N) + 1, sourcenode) = 0;   % symmetric index in adjacency matrix
-               s = setdiff([1:N], endnodes);                        % list of possible new end nodes with already connected nodes removed from list
-               s = setdiff(s, sourcenode);                          % remove source node from list of end nodes so that there are no self loops
-               targetnode = randsample(s, 1);                       % randomly select one of the nodes in c
-               A(sourcenode, targetnode) = 1;                       % connect source node to new end node  
-               A(targetnode, sourcenode) = 1;                       % symmetric index in adjacency matrix
-            end
-        end
-    end
-
-    % plot rewired graph
-    G_rewired = graph(A);
-    %figure()
-    %plot(G_rewired)
-
-    % compute characteristic path length for rewired graph
-    D = distances(G_rewired);
-    L = (sum(D, 'all'))./(N*(N - 1));
-
-    % compute clustering coefficient for rewired graph
-    C_i = zeros(N, 1);
-    for i = 1:N
-        n = [find(A(i, :))];
-        E = 0;
-        for j = n([1:length(n)])
-            m = [];
-            m = [find(A(j, :))];
-            for k = m([1:length(m)])
-                if any(n == k)
-                E = E + 1;
+for y = 1:length(p_v)
+L = zeros(20, 1);
+C = zeros(20, 1);
+p = p_v(y); 
+    for x = 1:20 
+        A = full(adjacency(G_r));                                   
+        for sourcenode = 1:N                                            % consider each source node
+            for t = 1:k/2                                               % consider each righthand nearest neighbour of each node, moving from first neighbour clockwise
+                r = zeros(1, k/2);                                      % empty vector for random uniform numbers
+                endnodes = find(A(sourcenode, :));                      % find the endnodes of the source node (i.e nodes connected by an edge)
+                r(t) = rand;                                            % generate uniform random numbers between 0 and 1
+                if r(t) < p                                             % if r is less than the probability given p, continue rewiring process                    
+                   A(sourcenode, mod(sourcenode + t - 1, N) + 1) = 0;   % remove the edge from the original end node
+                   A(mod(sourcenode + t - 1, N) + 1, sourcenode) = 0;   % symmetric index in adjacency matrix
+                   s = find(~ismember([1:N], [endnodes sourcenode]));   % find indices of target nodes that are not already connected to source node                              
+                   targetnode = randsample(s, 1);                       % randomly uniformly select one of the nodes
+                   A(sourcenode, targetnode) = 1;                       % connect source node to new end node  
+                   A(targetnode, sourcenode) = 1;                       % symmetric index in adjacency matrix
                 end
             end
         end
-        C_i(i) = E/(length(n)*(length(n) - 1)); % multiply by 2 for (k*(k-1)/2) but then divide by 2 to account for double counting of edges
+
+        G_p = graph(A);
+        % compute characteristic path length for rewired graph
+        D = distances(G_p);
+        l = (sum(D, 'all'))./(N*(N - 1));
+        % compute clustering coefficient 
+        c_i = zeros(N, 1);
+        for v = 1:N
+            n = [find(A(v, :))];
+            E = 0;
+            for w = n([1:length(n)])
+                m = [];
+                m = [find(A(w, :))];
+                for j = m([1:length(m)])
+                    if any(n == j)
+                        E = E + 1;
+                    end
+                end
+            end
+            c_i(v) = E/(length(n)*(length(n) - 1)); 
+        end
+        c = mean(c_i);
+        L(x) = l;
+        C(x) = c;
     end
-
-    % average clustering coefficient over all nodes
-    C = mean(C_i);
-
-    % store L_p and C_p in L and C vectors
-    L_p(x) = L;
-    C_p(x) = C;
+% average over 20 random realizations and save
+L_p(y) = mean(L);
+C_p(y) = mean(C);
 end
 
-% average over 20 random realizations
-L_p = mean(L_p);
-C_p = mean(C_p);
+%% plot 
+% normalize CPL and CC for each value of p by regular lattice CPL and CC
+L_p_norm = L_p./L_r;
+C_p_norm = C_p./C_r;
+
+% plot on log scale
+figure()
+scatter(p_v, L_p_norm, 'black', 'filled')
+set(gca, 'xscale', 'log')
+hold on
+scatter(p_v, C_p_norm, 'square', 'black')
+legend('L(p)/L(0)', 'C(p)/C(0)')
+title('L(p) and C(p) for Randomly Rewired Graphs')
+
+
 
 
 
