@@ -57,10 +57,12 @@ C_r = mean(C_i);
 
 % sequence of p values 
 p_v = [0.0001 0.00025 0.0005 0.001 0.0025 0.005 0.01 0.025 0.05 0.1 0.25 0.5 1]; 
+
 % create vectors to store characteristic path length and clustering coefficient for each value of p
 L_p = zeros(1, length(p_v));
 C_p = zeros(1, length(p_v));
 
+% reiterate ramdom rewiring process 20 times, calculate CPL and CC and average for every value of p in p_v
 for y = 1:length(p_v)
 L = zeros(20, 1);
 C = zeros(20, 1);
@@ -84,6 +86,7 @@ p = p_v(y);
         end
 
         G_p = graph(A);
+        
         % compute characteristic path length for rewired graph
         D = distances(G_p);
         l = (sum(D, 'all'))./(N*(N - 1));
