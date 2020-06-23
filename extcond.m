@@ -1,7 +1,7 @@
 function [data, brkpnts] = extcond(EEG, bgnname, endname)
 
 % DESCRIPTION
-% extcond extracts the EEG data pertaining to a time-locked condition and
+% extcond extracts the EEG data pertaining to a time-locked event of interest and
 % calculates the corresponding vector of break points in the data. 
 % EEG is a 1x1 structure containing EEG data for a given data set.
 % bgnname is the name of the event marker that indicates the beginning of the desired condition. 
@@ -45,7 +45,7 @@ b = find(type == 'boundary');
 boundarypnts = [floor(latency(b))];
 boundarypnts = find(ismember(condition,boundarypnts));
 
-% create vector boundary points between each segment
+% create vector of boundary points between each segment
 endpnts = zeros(1, length(endcond));
 for i = 1:length(endcond)
     endpnts(i) = find(condition == endcond(i));
