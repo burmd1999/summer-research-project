@@ -5,6 +5,9 @@ function [facesdata, facesbrkpnts] = ext_faces_cond(EEG);
 % create string vector of the types of event markers
 type = string({EEG.event.type});
 
+%  create vector of the latencies of the event markers
+latency = cell2mat({EEG.event.latency});
+
 % search for start of condition
 bgnname = 'hapy';
 bgnidx = zeros(1, 2);
@@ -25,9 +28,6 @@ for j = idx(1:length(idx))
         bgnidx = bgnidx(find(bgnidx));
     end
 end
-
-%  create vector of the latencies of the event markers
-latency = cell2mat({EEG.event.latency});
 
 % create vectors of the beginning points of condition and end points of condition
 bgncond = floor(latency(bgnidx));

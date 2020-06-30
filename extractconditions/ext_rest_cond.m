@@ -4,17 +4,18 @@ function [restingdata, restingbrkpnts] = ext_rest_cond(EEG)
 % create string vector of the types of event markers
 type = string({EEG.event.type});
 
+% create vector of the latencies of the event markers
+latency = cell2mat({EEG.event.latency});
+
 % search for start of condition
 bgnname = 'open';
 bgnidx = find(type ==  bgnname)';
 bgnidx = bgnidx(1);
+
 % search for end of condition
 endname = 'ecld';
 endidx = find(type == endname)';
 endidx = endidx(length(endidx));
-
-% create vector of the latencies of the event markers
-latency = cell2mat({EEG.event.latency});
 
 % create vectors of the beginning points of condition and end points of condition
 bgncond = floor(latency(bgnidx));

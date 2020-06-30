@@ -1,4 +1,4 @@
-function = [angyfacedata, angyfacebrkpnts] = ext_hapyface_cond(EEG)
+function [angyfacedata, angyfacebrkpnts] = ext_angyface_cond(EEG)
 
 % extract hapy face condition
 
@@ -6,6 +6,9 @@ bgnname = 'angy';
 
 % create string vector of the types of event markers
 type = string({EEG.event.type});
+
+% create vector of the latencies of the event markers
+latency = cell2mat({EEG.event.latency});
 
 % extract beginning of each hapy segment
 bgnidx = find(type == bgnname);
@@ -26,7 +29,7 @@ angyfacedata = EEG.data(condition);
 
 % search for boundary points within the condition
 b = find(type == 'boundary');
-boundarypnts = [floor(latency(b))];
+boundarypnts = floor(latency(b));
 boundarypnts = condition(find(ismember(condition,boundarypnts)));
 
 % make boundary points between endcond and bgncond 

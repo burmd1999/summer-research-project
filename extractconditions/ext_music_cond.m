@@ -5,13 +5,13 @@ function [musicdata, musicbrkpnts] = ext_music_cond(EEG)
 % create string vector of the types of event markers
 type = string({EEG.event.type});
 
+% create vector of the latencies of the event markers
+latency = cell2mat({EEG.event.latency});
+
 % search for start of condition
 musicidx = find(endsWith(type, 'm'))';
 bgnidx = musicidx(1);
 endidx = musicidx(length(musicidx));
-
-% create vector of the latencies of the event markers
-latency = cell2mat({EEG.event.latency});
 
 % create vectors of the beginning points of condition and end points of condition
 bgncond = floor(latency(bgnidx));

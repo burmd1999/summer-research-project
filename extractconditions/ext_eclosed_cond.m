@@ -5,6 +5,9 @@ function [eyescloseddata, eyesclosedbrkpnts] = ext_eclosed_cond(EEG)
 % create string vector of the types of event markers
 type = string({EEG.event.type});
 
+% create vector of the latencies of the event markers
+latency = cell2mat({EEG.event.latency});
+
 % search for start of condition
 bgnname = 'ecld';
 bgnidx = find(type == bgnname);
@@ -24,9 +27,6 @@ for i = 1:length(bgnidx)
     end        
 end
     
-% create vector of the latencies of the event markers
-latency = cell2mat({EEG.event.latency});
-
 % create vectors of the beginning points of condition and end points of condition
 bgncond = floor(latency(bgnidx));
 

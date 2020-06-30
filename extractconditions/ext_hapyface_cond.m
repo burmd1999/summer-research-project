@@ -1,4 +1,4 @@
-function = [hapyfacedata, hapyfacebrkpnts] = ext_hapyface_cond(EEG)
+function [hapyfacedata, hapyfacebrkpnts] = ext_hapyface_cond(EEG)
 
 % extract hapy face condition
 
@@ -6,6 +6,9 @@ bgnname = 'hapy';
 
 % create string vector of the types of event markers
 type = string({EEG.event.type});
+
+% create vector of the latencies of the event markers
+latency = cell2mat({EEG.event.latency});
 
 % extract beginning of each hapy segment
 bgnidx = find(type == bgnname);

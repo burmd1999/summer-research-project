@@ -2,16 +2,16 @@ function [feamdata, feambrkpnts] = ext_feam_cond(EEG)
 
 % extract joy music condition
 
-bgnname = 'feam'
+bgnname = 'feam';
 
 % create string vector of the types of event markers
 type = string({EEG.event.type});
 
-% search for start of condition
-bgnidx = find(type == bgnname);
-
 % create vector of the latencies of the event markers
 latency = cell2mat({EEG.event.latency});
+
+% search for start of condition
+bgnidx = find(type == bgnname);
 
 % create vectors of the beginning points of condition and end points of condition
 bgncond = floor(latency(bgnidx));

@@ -2,11 +2,14 @@ function [eyesopendata, eyesopenbrkpnts] = ext_eopen_cond(EEG)
 
 % extract eyes open condition 
 
-bgnname = 'eopn'
-endname = 'clos'
+bgnname = 'eopn';
+endname = 'clos';
 
 % create string vector of the types of event markers
 type = string({EEG.event.type});
+
+% create vector of the latencies of the event markers
+latency = cell2mat({EEG.event.latency});
 
 % search for start and end of condition
 bgnidx = find(type ==  bgnname)';
@@ -27,9 +30,8 @@ condition = cell2mat(condition);
 eyesopendata = EEG.data(:, condition);
 
 % search for boundary points within the condition
-boundary = find(duration);
-latency = cell2mat({EEG.event.latency});
-boundarypnts = [floor(latency(boundary))];
+b = find(type == 'boundary');
+boundarypnts = floor(latency(b));
 boundarypnts = condition(find(ismember(condition,boundarypnts)));
 
 % create vector of boundary points between each segment
