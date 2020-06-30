@@ -46,18 +46,26 @@ avgdeg = floor(mean(deg));
 % compute Watts-Strogatz model for regular graph with same number of nodes
 % and average degree
 p_v = [0.0001 0.00025 0.0005 0.001 0.0025 0.005 0.01 0.025 0.05 0.1 0.25 0.5 1]; 
-[L_r, C_r, wsmodel] = wsmodel(numchannels, avgdeg, p_v);
+[L_r, C_r, L_p, C_p] = wsmodel(numchannels, avgdeg, p_v);
 
 %% add points to scatter plot
-C_coh = C_coh/C_r;
-L_coh = L_coh/L_r;
+% plot 
+% normalize CPL and CC for each value of p by regular lattice CPL and CC
+L_p_norm = L_p./L_r;
+C_p_norm = C_p./C_r;
+
+% plot on log scale
+figure()
+wsmodel = scatter(p_v, L_p_norm, 'black', 'filled')
+set(gca, 'xscale', 'log')
 hold on
-scatter(1, C_coh)
+scatter(p_v, C_p_norm, 'square', 'black')
+L_coh_norm = L_coh/L_r;
+C_coh_norm = C_coh/C_r;
+compare = [p_v' L_p_norm' C_p_norm'];
 hold on
-scatter(1, L_coh)
-
-
-
-
-
-
+scatter(0.055, L_coh_norm, 'red', 'filled')
+hold on
+scatter(0.055, C_coh_norm, 'blue', 'filled')
+legend('L(p)/L(0)', 'C(p)/C(0)', 'L for 301 coherence data', 'C for 301 coherence data')
+title('Watts-Strogatz Model for 301 Coherence Data')

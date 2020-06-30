@@ -1,22 +1,13 @@
-function [L_r, C_r, wsmodel] = wsmodel(N, k, pvalues)
+%% Watts-Strogatz small world network model 
 
-% DESCRIPTION
-% The function wsmodel implements the Watts-Strogatz small world network
-% model algorithm to create a regular ring lattice with N nodes and degree k, compute the average characteristic path length and
-% average clustering coefficient of 20 random realizations of the rewiring
-% process for several probabilities p, and then plots these averages normalized by the characteristic path length and clustering coefficient of the
-% regular graph. 
-% Inputs:
-% N is the number of nodes and k is the mean degree.
-% pvalues is a row vector of probabilities between 0 and 1.
-% Outputs:
-% L_r is the characteristic path length and C_r is the clustering coefficient of a regular ring lattice with N nodes and
-% degree k.
-% wsmodel is a scatter graph of the average CPL and CC of 20 random graphs for several
-% values of p normalized by L_r and C_r. 
+% number of nodes, degree
+N = 1000;
+k = 10; 
 
-% FUNCTION
-% regular ring lattice:
+% test code to see if randomization process reproduces graph in Watts paper
+% for N=1000 nodes and k=10 nearest neighbours
+
+%% regular ring lattice
 % build adjacency matrix for ring lattice
 A = zeros(N);
 for i = 1:N
@@ -24,13 +15,18 @@ for i = 1:N
         if i - j ~=0 && mod(abs(i - j), N - k/2) <= k/2 
            A(i, j) = 1;
            A(j, i) = 1;
-        else A(i, j) = 0;
-             A(j, i) = 0;
+        else
+           A(i, j) = 0;
+           A(j, i) = 0;
         end
     end
 end
 
+% plot regular ring lattice 
 G_r = graph(A)
+figure()
+plot(G_r)
+title('Ring Lattice')
 
 % calculate characteristic path length for ring lattice
 D = distances(G_r);
@@ -57,8 +53,11 @@ end
 % average clustering coefficient over all nodes
 C_r = mean(C_i);
 
-% random rewiring process for varying values of p:
-p_v = pvalues;
+
+%% random rewiring process for varying values of p
+
+% sequence of p values 
+p_v = [0.0001 0.00025 0.0005 0.001 0.0025 0.005 0.01 0.025 0.05 0.1 0.25 0.5 1]; 
 
 % create vectors to store characteristic path length and clustering coefficient for each value of p
 L_p = zeros(1, length(p_v));
@@ -117,18 +116,44 @@ L_p(y) = mean(L);
 C_p(y) = mean(C);
 end
 
-% plot 
+%% plot 
 % normalize CPL and CC for each value of p by regular lattice CPL and CC
 L_p_norm = L_p./L_r;
 C_p_norm = C_p./C_r;
 
 % plot on log scale
 figure()
-wsmodel = scatter(p_v, L_p_norm, 'black', 'filled')
+scatter(p_v, L_p_norm, 'black', 'filled')
 set(gca, 'xscale', 'log')
 hold on
 scatter(p_v, C_p_norm, 'square', 'black')
 legend('L(p)/L(0)', 'C(p)/C(0)')
 title('L(p) and C(p) for Randomly Rewired Graphs')
 
-end
+
+
+
+
+
+
+
+
+
+ 
+
+
+
+    
+
+
+
+
+
+
+    
+    
+    
+    
+    
+
+
