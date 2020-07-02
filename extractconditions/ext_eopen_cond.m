@@ -32,14 +32,13 @@ eyesopendata = EEG.data(:, condition);
 % search for boundary points within the condition
 b = find(type == 'boundary');
 boundarypnts = floor(latency(b));
-boundarypnts = condition(find(ismember(condition,boundarypnts)));
+boundarypnts = find(ismember(condition,boundarypnts));
 
-% create vector of boundary points between each segment
-condition = cell(1, length(bgncond));
-for i = 1:length(bgncond)
-    condition{i} = bgncond(i):endcond(i);
+% make boundary points between endcond and bgncond 
+endpnts = zeros(1, length(endcond));
+for i = 1:length(endcond)
+    endpnts(i) = find(condition == endcond(i));
 end
-condition = cell2mat(condition);
 
 % final breakpoints vector 
 eyesopenbrkpnts = sort([0 boundarypnts endpnts]);

@@ -32,3 +32,4 @@ cptcan_readfiles_cptcoh.m~
 extractconditions2.m
 eegdatasets_list.txt
 readfilestest.m
+*.m~

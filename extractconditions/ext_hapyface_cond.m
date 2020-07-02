@@ -30,7 +30,7 @@ hapyfacedata = EEG.data(condition);
 % search for boundary points within the condition
 b = find(type == 'boundary');
 boundarypnts = [floor(latency(b))];
-boundarypnts = condition(find(ismember(condition,boundarypnts)));
+boundarypnts = find(ismember(condition,boundarypnts));
 
 % make boundary points between endcond and bgncond 
 endpnts = zeros(1, length(endcond));
