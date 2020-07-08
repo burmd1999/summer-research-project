@@ -1,7 +1,26 @@
 function [eyesopendata, eyesopenbrkpnts] = ext_eopen_cond(EEG)
 
-% extract eyes open condition 
+% DESCRIPTION OF FUNCTION 
 
+% The function ext_eopen_cond extracts the data and breakpoints
+% pertaining to the eyes open
+% condition in the EEG data.
+
+% Input:
+% EEG is a 1x1 structure with fields event, srate, and latency in
+% particular.
+
+% Outputs:
+% eyesopendata is a data matrix with dimensions (number of channels) x
+% (number of data points in eyes closed condition)
+% eyesopenbrkpnts is a row vector whose entries are the breakpoints in the
+% eyes open condition. Note that the first entry is 0, followed by the
+% boundary points within the eyes open condition, and the last entry is the
+% total number of data points in the eyes open condition. 
+
+% FUNCTION 
+
+% names of start and end of eyes open condition
 bgnname = 'eopn';
 endname = 'clos';
 

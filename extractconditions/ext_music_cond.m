@@ -1,6 +1,6 @@
 function [musicdata, musicbrkpnts] = ext_music_cond(EEG)
 
-% extract resting condition data
+% extract music condition data
 
 % create string vector of the types of event markers
 type = string({EEG.event.type});
