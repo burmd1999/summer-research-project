@@ -37,7 +37,7 @@ s = size(brkpnts, 2);
 k = 2:s; 
 numwindows = sum(floor((brkpnts(k) - brkpnts(k-1) - srate)/overlap) + 1);
 
-% create matrices of zeros to store coherence data 
+% create matrix of zeros to store coherence data 
 COH = zeros(numchannels, numchannels, srate);
 
 % loop to calculate coherence of each pair of channels

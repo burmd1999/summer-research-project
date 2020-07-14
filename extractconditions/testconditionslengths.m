@@ -5,12 +5,13 @@ eegdatasets_list = textscan(fileID, '%s');
 fclose(fileID);
 eegdatasets_list = eegdatasets_list{1};
 
-test_cond_length = cell(length(eegdatasets_list), 1);
+test_cond_length = cell(length(eegdatasets_list), 2);
 
 for k = 1:length(eegdatasets_list)
     eeglab
-    EEG = pop_loadset(eegdatasets_list{k})
-    test_cond_length{k} = ext_all_cond(EEG);
+    EEG = pop_loadset(eegdatasets_list{k});
+    test_cond_length{k, 1} = ext_all_cond(EEG);
+    test_cond_length{k, 2} = EEG.srate;
 end
 
 %%

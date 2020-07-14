@@ -30,24 +30,15 @@ type = string({EEG.event.type});
 latency = cell2mat({EEG.event.latency});
 
 % create vector of boundary points in event structure
-b = type == 'boundary';
-boundarypnts = floor(latency(b));
+boundarypnts = floor(latency(type == 'boundary'));
 
 %% extract resting condition
 
-% search for start of resting condition
-bgnname_rest = 'open';
-bgnidx_rest = find(type == bgnname_rest)';
-bgnidx_rest = bgnidx_rest(1);
-
-% search for end of resting condition
-endname_rest = 'ecld';
-endidx_rest = find(type == endname_rest)';
-endidx_rest = endidx_rest(length(endidx_rest));
-
 % create vectors of the beginning data points of condition and end points of condition
-bgncond_rest = floor(latency(bgnidx_rest));
-endcond_rest = floor(latency(endidx_rest)) + 60*EEG.srate + 1;
+bgncond_rest = floor(latency(type == 'open'));
+bgncond_rest = bgncond_rest(1);
+endcond_rest = floor(latency(type == 'ecld')); 
+endcond_rest = endcond_rest(length(endcond_rest)) + 60*EEG.srate + 1;
 
 % create a vector of the indices of the resting condition
 condition_rest = bgncond_rest:endcond_rest;
@@ -56,7 +47,7 @@ condition_rest = bgncond_rest:endcond_rest;
 restingdata = EEG.data(:, condition_rest);
 
 % search for boundary points within the resting condition
-boundarypnts_rest = find(ismember(condition_rest,boundarypnts));
+boundarypnts_rest = find(ismember(condition_rest, boundarypnts));
 
 % end point of data 
 endpnt_rest = length(condition_rest);
@@ -64,16 +55,15 @@ endpnt_rest = length(condition_rest);
 % final breakpoints vector 
 restingbrkpnts = sort([0 boundarypnts_rest endpnt_rest]);
 
+
 %% extract music condition
 
 % search for start of condition
-musicidx = find(endsWith(type, 'm'))';
-bgnidx_music = musicidx(1);
-endidx_music = musicidx(length(musicidx));
+musicidx = floor(latency(endsWith(type, 'm')));
 
 % create vectors of the beginning points of condition and end points of condition
-bgncond_music = floor(latency(bgnidx_music));
-endcond_music = floor(latency(endidx_music)) + 60*EEG.srate + 1;
+bgncond_music = musicidx(1);
+endcond_music = musicidx(length(musicidx)) + (60*EEG.srate + 1);
 
 % create a vector of the indices of the desired condition
 condition_music = cell(1, length(bgncond_music));
@@ -97,28 +87,27 @@ end
 % final breakpoints vector 
 musicbrkpnts = sort([0 boundarypnts_music endpnts_music]);
 
-
 %% extract faces condition data
 
 % search for start of condition
 bgnname_faces = 'hapy';
 bgnidx_faces = zeros(1, 2);
-bgnidx_faces(1) = find(type ==  bgnname_faces, 1)';
+bgnidx_faces(1) = find(type == bgnname_faces, 1);
 typeidx_faces = 1:length(type);
 idx_faces = find(typeidx_faces > bgnidx_faces(1));
 
-endidx_faces = zeros(1, 2);
-for j = idx_faces(1:length(idx_faces))
-    if type(j) == 'SESS'
-       endidx_faces(1) = j - 1;
-       endidx_faces(2) = length(type);
-       bgnidx_faces(2) = j + 5;
-       break
-    else
-        endidx_faces(1) = length(type);
-        endidx_faces = endidx_faces(find(endidx_faces));
-        bgnidx_faces = bgnidx_faces(find(bgnidx_faces));
-    end
+% parse into two sections if they exist, otherwise, leave as one section
+sess = find(type == 'SESS');
+sess = sess(ismember(sess, idx_faces));
+
+if ~isempty(sess)
+    endidx_faces(1) = sess - 1;
+    bgnidx_faces(2) = sess + 6;
+    endidx_faces(2) = length(type);
+else
+    endidx_faces(1) = length(type);
+    bgnidx_faces = bgnidx_faces(bgnidxfaces > 0);
+    endidx_faces = endidx_faces(endidx_faces > 0);
 end
 
 % create vectors of the beginning points of condition and end points of condition
@@ -147,18 +136,14 @@ end
 % final breakpoints vector 
 facesbrkpnts = sort([0 boundarypnts_faces endpnts_faces]);
 
-%% eyes open 
-% name of the end of the eyes open condition - ecld
-endname_eopen = 'ecld';
 
-% vector of indices of the end of eyes open condition- ecld marker
-endidx_eopen = find(type == endname_eopen);
+%% eyes open condition
 
 % latencies of the end of the eyes open condition
-endcond_eopen = floor(latency(endidx_eopen));
+endcond_eopen = floor(latency(type == 'clos'));
 
-% extract 60 seconds prior to each ecld
-bgncond_eopen = endcond_eopen - 60*EEG.srate + 1;
+% extract 60 seconds prior to each clos
+bgncond_eopen = endcond_eopen - (60*EEG.srate + 1);
 
 % create a vector of the indices of the eyes open condition
 condition_eopen = cell(1, length(bgncond_eopen));
@@ -182,16 +167,11 @@ end
 % final breakpoints vector 
 eyesopenbrkpnts = sort([0 boundarypnts_eopen endpnts_eopen]);
 
-%% eyes closed 
 
-% search for start of condition
-bgnname_eclosed = 'ecld';
-
-% index in event structure of beginning of eyes closed condition 
-bgnidx_eclosed = find(type == bgnname_eclosed);
+%% eyes closed condition
 
 % create vectors of the beginning points of condition and end points of condition
-bgncond_eclosed = floor(latency(bgnidx_eclosed));
+bgncond_eclosed = floor(latency(type == 'ecld'));
 % end points - 60 seconds later
 endcond_eclosed = bgncond_eclosed + 60*EEG.srate + 1;
 
@@ -217,7 +197,7 @@ end
 % final breakpoints vector 
 eyesclosedbrkpnts = sort([0 boundarypnts_eclosed endpnts_eclosed]);
 
-%% different music - hapm, joym, sadm, feam
+%% different music - hapm, joym, sadm, feam conditions
 
 % names of start of music conditions
 bgnname_diff_music = ["hapm", "joym", "sadm", "feam"];
@@ -230,7 +210,7 @@ for i = 1:length(bgnname_diff_music)
     end
 end
 
-% remove music condition that is not in data set
+% remove name of music condition that is not in data set
 rm = find(bgnname_diff_music == "rm");
 if ~isempty(rm)
     bgnname_diff_music(rm) = [];
@@ -274,7 +254,7 @@ for i = 1:length(condition_diff_music)
     diff_music_data{i} = EEG.data(:, condition_diff_music{i});
 end
 
-%% different faces - hapy, fear, neut, angy
+%% different faces - hapy, fear, neut, angy conditions
 % names of markers
 bgnname_diff_faces = ["hapy", "fear", "neut", "angy"];
 
@@ -308,7 +288,7 @@ end
 
 endcond_diff_faces = cell(length(bgncond_diff_faces), 1);
 for i = 1:length(bgncond_diff_faces)
-    endcond_diff_faces{i} = bgncond_diff_faces{i} + 2*EEG.srate + 1;
+    endcond_diff_faces{i} = bgncond_diff_faces{i} + (2*EEG.srate + 1);
 end
 
 condition_diff_faces = cell(length(bgncond_diff_faces), 1);
@@ -363,7 +343,8 @@ for i = 1:length(condition_diff_faces)
     diff_faces_data{i} = EEG.data(:, condition_diff_faces{i});
 end
 
-%% 
+
+%% cell array of all of the conditions 
 cond_names = ["resting" "music" "faces" "eyesopen" "eyesclosed" bgnname_diff_music bgnname_diff_faces];
 
 all_cond = cell(length(cond_names), 3);
