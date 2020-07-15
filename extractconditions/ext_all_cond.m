@@ -347,7 +347,7 @@ end
 %% cell array of all of the conditions 
 cond_names = ["resting" "music" "faces" "eyesopen" "eyesclosed" bgnname_diff_music bgnname_diff_faces];
 
-all_cond = cell(length(cond_names), 3);
+all_cond = cell(length(cond_names), 4);
 
 for i = 1:length(all_cond)
     all_cond{i, 1} = cond_names(i);
@@ -372,6 +372,10 @@ end
 for i = 1:length(diff_faces_data)
     all_cond{i + 5 + length(diff_music_data), 2} = diff_faces_data{i};
     all_cond{i + 5 + length(diff_music_data), 3} = diff_faces_brkpnts{i};
+end
+
+for i = 1:length(all_cond)
+    all_cond{i, 4} = ((length(all_cond{i, 2}) - 1)/EEG.srate)/60;
 end
 
 end
