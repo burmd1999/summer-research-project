@@ -1,9 +1,19 @@
 function [L, C] = coh_graph(cohdata, freq, threshold)
 
+% coh_graph computes the characteristic path length and clustering
+% coefficient of a graph whose nodes are electrodes/channels and an edge 
+% connect two nodes if the sum of coherence values between the two nodes is above a given threshold 
+% for a certain frequency range.
+
 % Inputs:
 % cohdata is a numchannels x numchannels x srate matrix
 % freq is a frequency range of interest [a, b], input as a:b.
-% threshold is a numerical value above which sum of coherence values for pair of channels is considered significant 
+% threshold is a numerical value above which the sum of coherence values for pair of channels is considered significant. 
+
+% Outputs:
+% L is the characteristic path length (mean shortest path length) and C is
+% the average clustering coefficient of all the nodes as defined by Watts &
+% Strogatz.
 
 % number of channels
 numchannels = size(cohdata, 1); 
