@@ -33,6 +33,7 @@ Szz = mean(Szz);
 Sxy = mean(Sxy);
 Sxz = mean(Sxz);
 
+
 % compute spectral coherence for both pairs of channels
 % channel 10 and 11
 coh1 = ((abs(Sxy)).^2)./((Sxx).*(Syy));
@@ -41,8 +42,8 @@ coh2 = ((abs(Sxz)).^2)./((Sxx).*(Szz));
 
 % plot coherence for each pair
 % ignore negative frequencies
-coh1 = [coh1(1:srate/2)];
-coh2 = [coh2(1:srate/2)];
+coh1 = coh1(1:srate/2);
+coh2 = coh2(1:srate/2);
 % create frequence vector 
 freq = linspace(0, srate/2, srate/2);
 % channel 10 and 11

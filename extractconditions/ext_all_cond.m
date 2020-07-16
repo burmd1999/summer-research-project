@@ -106,7 +106,7 @@ if ~isempty(sess)
     endidx_faces(2) = length(type);
 else
     endidx_faces(1) = length(type);
-    bgnidx_faces = bgnidx_faces(bgnidxfaces > 0);
+    bgnidx_faces = bgnidx_faces(bgnidx_faces > 0);
     endidx_faces = endidx_faces(endidx_faces > 0);
 end
 

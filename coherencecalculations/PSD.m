@@ -42,7 +42,7 @@ numwindows = sum(floor((brkpnts(k) - brkpnts(k-1) - srate)/overlap) + 1);
 PSD = zeros(numchannels, srate);
 
 % loop to calculate psd of each channel 
-for i = 1:2
+for i = 1:numchannels
     for k = 2:s
         for l = 1:floor((brkpnts(k) - brkpnts(k - 1) - srate)/overlap) + 1
             PSD(i, :) = PSD(i, :) + ((abs(fft((data(i, brkpnts(k - 1) + 1 + overlap*(l - 1):(brkpnts(k - 1) + srate + overlap*(l - 1)))).*w))).^2)./numwindows;

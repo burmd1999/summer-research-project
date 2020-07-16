@@ -2,7 +2,7 @@
 addpath('/home/bc11xx/projects/def-wjmarsha/bc11xx', '/home/bc11xx/MATLAB/eeglab2019_1')
 
 % open text file, read file names 
-fileID = fopen('eegdatasets_list_all.txt', 'r');
+fileID = fopen('eegdatasets_list.txt', 'r');
 eegdatasets_list = textscan(fileID, '%s');
 fclose(fileID);
 eegdatasets_list = eegdatasets_list{1};
@@ -57,6 +57,6 @@ end
 %     end
 % end
 
-save('allfiles_coh_psd.mat', 'allfiles_coh_psd', '-v7.3')
+save('sixfiles_coh_psd.mat', 'allfiles_coh_psd', '-v7.3')
 
 exit

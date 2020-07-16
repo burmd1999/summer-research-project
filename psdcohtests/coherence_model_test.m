@@ -40,14 +40,14 @@ Sxy = mean(Sxy);
 
 % plot coherence
 % ignore negative frequencies
-coh = [coh((srate/2 + 1):srate) ; coh(1:srate/2)]
+coh = [coh((srate/2 + 1):srate)  coh(1:srate/2)];
 % create frequency vector
-freq = linspace(0, srate/2, srate/2)
+freq = linspace(0, srate/2, srate/2);
 figure()
 plot1 = plot(freq, coh)
 
 % plot derived coherence function
-coh2 = 1./(21 - 16*cos(2*pi*freq))
+coh2 = 1./(21 - 16*cos(2*pi*freq));
 figure()
 plot2 = plot(freq, coh2)
 
