@@ -35,11 +35,11 @@ A = coh_sum > threshold & round(coh_sum) ~= freq(length(freq));
 % create graph
 G = graph(A);
 
-% characteristic path length
+%% characteristic path length
 D = distances(G);
 L = (sum(D, 'all'))./(G.numnodes*(G.numnodes - 1));
 
-% clustering coefficient
+%% clustering coefficient
 C_i = zeros(G.numnodes, 1);
 for i = 1:G.numnodes
     n = [find(A(i, :))];

@@ -38,5 +38,9 @@ computecanada_eyesclosedmarker_test.m
 *.txt
 cptcan_readfiles_cptcoh.m
 ept_TFCE-matlab
+SWP(1)
+computecanada_testconditionlengths.m
+test_filefolder.m
+
 
 

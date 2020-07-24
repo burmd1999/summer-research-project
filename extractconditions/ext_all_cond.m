@@ -35,7 +35,7 @@ boundarypnts = floor(latency(type == 'boundary'));
 %% extract resting condition
 
 % create vectors of the beginning data points of condition and end points of condition
-bgncond_rest = floor(latency(type == 'open'));
+bgncond_rest = floor(latency(type == 'eopn'));
 bgncond_rest = bgncond_rest(1);
 endcond_rest = floor(latency(type == 'ecld')); 
 endcond_rest = endcond_rest(length(endcond_rest)) + 60*EEG.srate + 1;
@@ -92,7 +92,14 @@ musicbrkpnts = sort([0 boundarypnts_music endpnts_music]);
 % search for start of condition
 bgnname_faces = 'hapy';
 bgnidx_faces = zeros(1, 2);
-bgnidx_faces(1) = find(type == bgnname_faces, 1);
+hapy = find(type == bgnname_faces);
+
+if hapy(1) < musicidx(1)
+   bgnidx_faces(1) = hapy(2);
+else
+   bgnidx_faces(1) = hapy(1);
+end
+
 typeidx_faces = 1:length(type);
 idx_faces = find(typeidx_faces > bgnidx_faces(1));
 

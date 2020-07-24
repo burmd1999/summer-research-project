@@ -1,15 +1,15 @@
 % find characteristic path length and clustering coefficient of coherence graph
 % load data
-load('COH.mat', 'COH')
+load('no_voc_task_301_coh.mat', 'no_voc_task_301_coh')
 
 % variables
-numchannels = size(COH, 1);
+numchannels = size(no_voc_task_301_coh, 1);
 
 % set a threshold for coherence
 threshold = 0.20;
 
 % adjacency matrix
-A = all(COH > threshold & COH ~= 1, 3);
+A = all(no_voc_task_301_coh > threshold & no_voc_task_301_coh ~= 1, 3);
 
 % graph
 G = graph(A);
